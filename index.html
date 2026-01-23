@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Pribadi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .cloud-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            color: white;
+        }
+
+        .cloud-status:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.02);
+        }
+
+        .cloud-status.connected { background: rgba(76, 175, 80, 0.4); }
+        .cloud-status.disconnected { background: rgba(244, 67, 54, 0.4); }
+        .cloud-status.loading { background: rgba(255, 193, 7, 0.4); }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .connected .status-dot { background: #4CAF50; }
+        .disconnected .status-dot { background: #f44336; }
+        .loading .status-dot { background: #FFC107; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #d0d0d0;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 18px 14px 50px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.95);
+            font-family: inherit;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .notes-section h2 {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notes-count {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .note-card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .note-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            user-select: none;
+        }
+
+        .note-header:hover {
+            background: #f8f9fa;
+        }
+
+        .note-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .note-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .note-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .note-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .note-date {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .note-arrow {
+            color: #999;
+            transition: transform 0.3s ease;
+        }
+
+        .note-card.active .note-arrow {
+            transform: rotate(180deg);
+        }
+
+        .note-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .note-card.active .note-body {
+            max-height: 400px;
+        }
+
+        .note-body-inner {
+            padding: 0 20px 20px 20px;
+        }
+
+        .note-content {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-edit {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .btn-edit:hover {
+            background: #1976d2;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .btn-delete:hover {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            opacity: 0.5;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            display: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { background: linear-gradient(135deg, #4CAF50, #45a049); }
+        .toast.error { background: linear-gradient(135deg, #f44336, #d32f2f); }
+        .toast.warning { background: linear-gradient(135deg, #ff9800, #f57c00); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h3 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            margin-bottom: 10px;
+        }
+
+        .modal input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal small {
+            display: block;
+            color: #999;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-buttons .btn {
+            flex: 1;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+        }
+
+        @media (max-width: 400px) {
+            body { padding: 15px; }
+            header h1 { font-size: 1.5rem; }
+            .form-card { padding: 20px; }
+            .note-header { padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-open"></i> Catatan Pribadi</h1>
+            <p>Simpan catatan Anda di Google Sheets</p>
+            <button class="cloud-status disconnected" id="cloudStatus">
+                <span class="status-dot"></span>
+                <span id="statusText"><i class="fas fa-cog"></i> Klik untuk Setup</span>
+            </button>
+        </header>
+
+        <div class="form-card">
+            <form id="noteForm">
+                <input type="hidden" id="noteId">
+                <div class="form-group">
+                    <label><i class="fas fa-heading"></i> Judul</label>
+                    <input type="text" id="title" placeholder="Masukkan judul catatan..." required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Isi Catatan</label>
+                    <textarea id="content" placeholder="Tulis catatan Anda di sini..." required></textarea>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="notes-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Cari catatan...">
+            </div>
+
+            <h2>
+                <i class="fas fa-sticky-note"></i> Daftar Catatan
+                <span class="notes-count" id="notesCount">0</span>
+            </h2>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Memuat catatan...</p>
+            </div>
+
+            <div class="notes-list" id="notesList"></div>
+
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-clipboard"></i>
+                <p>Belum ada catatan.<br>Mulai tulis catatan pertama!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Setup Modal -->
+    <div class="modal-overlay" id="setupModal">
+        <div class="modal">
+            <h3><i class="fab fa-google" style="color: #4285f4;"></i> Setup Google Sheets</h3>
+            <p>Masukkan URL Web App dari Google Apps Script Anda:</p>
+            <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/AKfycbzG_uBVK3eGuGzeyAWYPoVLg0JECou9hqhDfhYSauujM-5hKWUL3C-xGgNy93KM2TU/exec">
+            <small>Deploy Apps Script → Copy URL Web App → Paste di sini</small>
+            <div class="modal-buttons">
+                <button type="button" class="btn btn-secondary" id="cancelSetupBtn">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button type="button" class="btn btn-primary" id="saveSetupBtn">
+                    <i class="fas fa-check"></i> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <h3><i class="fas fa-exclamation-triangle" style="color: #f44336;"></i> Hapus Catatan?</h3>
+            <p>Catatan yang dihapus tidak dapat dikembalikan. Yakin ingin menghapus?</p>
+            <div class="modal-buttons">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash"></i> Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // VARIABLES
+        // ==========================================
+        let API_URL = localStorage.getItem('gs_api_url') || '';
+        let notes = [];
+        let deleteNoteId = null;
+        let isEditing = false;
+
+        // ==========================================
+        // DOM ELEMENTS
+        // ==========================================
+        const $ = id => document.getElementById(id);
+        
+        const noteForm = $('noteForm');
+        const noteIdInput = $('noteId');
+        const titleInput = $('title');
+        const contentInput = $('content');
+        const submitBtn = $('submitBtn');
+        const cancelBtn = $('cancelBtn');
+        const notesList = $('notesList');
+        const notesCount = $('notesCount');
+        const loading = $('loading');
+        const emptyState = $('emptyState');
+        const searchInput = $('searchInput');
+        const toast = $('toast');
+        const cloudStatus = $('cloudStatus');
+        const statusText = $('statusText');
+        const setupModal = $('setupModal');
+        const deleteModal = $('deleteModal');
+        const apiUrlInput = $('apiUrlInput');
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCloudStatus();
+            if (API_URL) {
+                loadNotes();
+            } else {
+                loadLocal();
+            }
+            setupEventListeners();
+        });
+
+        // ==========================================
+        // EVENT LISTENERS
+        // ==========================================
+        function setupEventListeners() {
+            // Cloud status - open setup
+            cloudStatus.addEventListener('click', function(e) {
+                e.preventDefault();
+                openSetupModal();
+            });
+
+            // Setup modal buttons
+            $('saveSetupBtn').addEventListener('click', saveSetup);
+            $('cancelSetupBtn').addEventListener('click', closeSetupModal);
+
+            // Delete modal buttons
+            $('confirmDeleteBtn').addEventListener('click', executeDelete);
+            $('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+
+            // Close modal on overlay click
+            setupModal.addEventListener('click', function(e) {
+                if (e.target === setupModal) closeSetupModal();
+            });
+            deleteModal.addEventListener('click', function(e) {
+                if (e.target === deleteModal) closeDeleteModal();
+            });
+
+            // Form
+            noteForm.addEventListener('submit', handleSubmit);
+            cancelBtn.addEventListener('click', resetForm);
+
+            // Search
+            searchInput.addEventListener('input', function() {
+                renderNotes(this.value);
+            });
+        }
+
+        // ==========================================
+        // SETUP MODAL
+        // ==========================================
+        function openSetupModal() {
+            apiUrlInput.value = API_URL;
+            setupModal.classList.add('show');
+            setTimeout(() => apiUrlInput.focus(), 100);
+        }
+
+        function closeSetupModal() {
+            setupModal.classList.remove('show');
+        }
+
+        function saveSetup() {
+            const url = apiUrlInput.value.trim();
+            
+            if (url && !url.includes('script.google.com')) {
+                showToast('URL tidak valid! Harus dari script.google.com', 'error');
+                return;
+            }
+
+            API_URL = url;
+            localStorage.setItem('gs_api_url', url);
+            closeSetupModal();
+            updateCloudStatus();
+
+            if (url) {
+                showToast('Setup berhasil! Memuat data...', 'success');
+                loadNotes();
+            } else {
+                showToast('Menggunakan penyimpanan lokal', 'warning');
+                loadLocal();
+            }
+        }
+
+        // ==========================================
+        // DELETE MODAL
+        // ==========================================
+        function openDeleteModal(id) {
+            deleteNoteId = id;
+            deleteModal.classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            deleteModal.classList.remove('show');
+            deleteNoteId = null;
+        }
+
+        async function executeDelete() {
+            if (!deleteNoteId) return;
+
+            const btn = $('confirmDeleteBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                if (API_URL) {
+                    await apiCall('delete', { id: deleteNoteId });
+                    await loadNotes();
+                } else {
+                    notes = notes.filter(n => n.id !== deleteNoteId);
+                    saveLocal();
+                    renderNotes();
+                }
+                showToast('Catatan dihapus!', 'success');
+            } catch (err) {
+                showToast('Gagal menghapus: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-trash"></i> Hapus';
+                closeDeleteModal();
+            }
+        }
+
+        // ==========================================
+        // CLOUD STATUS
+        // ==========================================
+        function updateCloudStatus(state) {
+            cloudStatus.className = 'cloud-status';
+            
+            if (!API_URL) {
+                cloudStatus.classList.add('disconnected');
+                statusText.innerHTML = '<i class="fas fa-cog"></i> Klik untuk Setup';
+            } else if (state === 'loading') {
+                cloudStatus.classList.add('loading');
+                statusText.innerHTML = '<i class="fas fa-sync fa-spin"></i> Menyinkronkan...';
+            } else if (state === 'error') {
+                cloudStatus.classList.add('disconnected');
+                statusText.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
+            } else {
+                cloudStatus.classList.add('connected');
+                statusText.innerHTML = '<i class="fas fa-cloud"></i> Google Sheets';
+            }
+        }
+
+        // ==========================================
+        // TOAST
+        // ==========================================
+        function showToast(msg, type = 'success') {
+            toast.textContent = msg;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(() => toast.className = 'toast', 3000);
+        }
+
+        // ==========================================
+        // API
+        // ==========================================
+        async function apiCall(action, params = {}) {
+            const url = new URL(API_URL);
+            url.searchParams.set('action', action);
+            Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
+
+            const res = await fetch(url.toString());
+            const data = await res.json();
+            
+            if (!data.success) throw new Error(data.error || 'Error');
+            return data;
+        }
+
+        // ==========================================
+        // LOCAL STORAGE
+        // ==========================================
+        function loadLocal() {
+            notes = JSON.parse(localStorage.getItem('notes_local') || '[]');
+            renderNotes();
+        }
+
+        function saveLocal() {
+            localStorage.setItem('notes_local', JSON.stringify(notes));
+        }
+
+        // ==========================================
+        // LOAD NOTES
+        // ==========================================
+        async function loadNotes() {
+            if (!API_URL) return loadLocal();
+
+            loading.style.display = 'block';
+            notesList.innerHTML = '';
+            emptyState.style.display = 'none';
+            updateCloudStatus('loading');
+
+            try {
+                const result = await apiCall('getAll');
+                notes = result.data || [];
+                updateCloudStatus('connected');
+            } catch (err) {
+                console.error(err);
+                updateCloudStatus('error');
+                showToast('Gagal memuat, pakai data lokal', 'warning');
+                loadLocal();
+                return;
+            } finally {
+                loading.style.display = 'none';
+            }
+
+            renderNotes();
+        }
+
+        // ==========================================
+        // RENDER NOTES
+        // ==========================================
+        function renderNotes(search = '') {
+            notesList.innerHTML = '';
+
+            let filtered = notes;
+            if (search) {
+                const s = search.toLowerCase();
+                filtered = notes.filter(n => 
+                    n.title.toLowerCase().includes(s) || 
+                    n.content.toLowerCase().includes(s)
+                );
+            }
+
+            notesCount.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                emptyState.style.display = 'block';
+                emptyState.innerHTML = search 
+                    ? `<i class="fas fa-search"></i><p>Tidak ditemukan: "${escapeHtml(search)}"</p>`
+                    : `<i class="fas fa-clipboard"></i><p>Belum ada catatan.<br>Mulai tulis catatan pertama!</p>`;
+            } else {
+                emptyState.style.display = 'none';
+                filtered.forEach((note, i) => {
+                    const card = createNoteCard(note);
+                    card.style.animationDelay = (i * 0.05) + 's';
+                    notesList.appendChild(card);
+                });
+            }
+        }
+
+        // ==========================================
+        // CREATE NOTE CARD
+        // ==========================================
+        function createNoteCard(note) {
+            const card = document.createElement('div');
+            card.className = 'note-card';
+
+            card.innerHTML = `
+                <div class="note-header">
+                    <div class="note-title-wrap">
+                        <div class="note-icon"><i class="fas fa-sticky-note"></i></div>
+                        <div class="note-info">
+                            <div class="note-title">${escapeHtml(note.title)}</div>
+                            <div class="note-date"><i class="far fa-clock"></i> ${note.createdAt || 'Baru'}</div>
+                        </div>
+                    </div>
+                    <div class="note-arrow"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="note-body">
+                    <div class="note-body-inner">
+                        <div class="note-content">${escapeHtml(note.content)}</div>
+                        <div class="note-actions">
+                            <button class="btn-action btn-edit"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn-action btn-delete"><i class="fas fa-trash"></i> Hapus</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Toggle accordion
+            card.querySelector('.note-header').addEventListener('click', function() {
+                document.querySelectorAll('.note-card.active').forEach(c => {
+                    if (c !== card) c.classList.remove('active');
+                });
+                card.classList.toggle('active');
+            });
+
+            // Edit button
+            card.querySelector('.btn-edit').addEventListener('click', function(e) {
+                e.stopPropagation();
+                editNote(note);
+            });
+
+            // Delete button
+            card.querySelector('.btn-delete').addEventListener('click', function(e) {
+                e.stopPropagation();
+                openDeleteModal(note.id);
+            });
+
+            return card;
+        }
+
+        // ==========================================
+        // ESCAPE HTML
+        // ==========================================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ==========================================
+        // FORM SUBMIT
+        // ==========================================
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+
+            if (!title || !content) {
+                showToast('Isi judul dan catatan!', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+
+            try {
+                if (API_URL) {
+                    if (isEditing) {
+                        await apiCall('update', { id: noteIdInput.value, title, content });
+                    } else {
+                        await apiCall('add', { title, content });
+                    }
+                    await loadNotes();
+                } else {
+                    if (isEditing) {
+                        const idx = notes.findIndex(n => n.id === noteIdInput.value);
+                        if (idx !== -1) notes[idx] = { ...notes[idx], title, content };
+                    } else {
+                        notes.unshift({
+                            id: Date.now().toString(),
+                            title, content,
+                            createdAt: new Date().toLocaleString('id-ID')
+                        });
+                    }
+                    saveLocal();
+                    renderNotes();
+                }
+                showToast(isEditing ? 'Catatan diperbarui!' : 'Catatan disimpan!', 'success');
+                resetForm();
+            } catch (err) {
+                showToast('Gagal: ' + err.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Simpan';
+            }
+        }
+
+        // ==========================================
+        // EDIT NOTE
+        // ==========================================
+        function editNote(note) {
+            isEditing = true;
+            noteIdInput.value = note.id;
+            titleInput.value = note.title;
+            contentInput.value = note.content;
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Update';
+            cancelBtn.style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            titleInput.focus();
+        }
+
+        // ==========================================
+        // RESET FORM
+        // ==========================================
+        function resetForm() {
+            isEditing = false;
+            noteIdInput.value = '';
+            noteForm.reset();
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Simpan';
+            cancelBtn.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
